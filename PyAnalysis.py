@@ -1,7 +1,7 @@
 import os
 import sys
 import pandas as pd
-import numpy as np
+import datetime as dt
 import functools
 import argparse
 mpath = os.path.join(os.path.abspath('..'), 'PyShare')
@@ -25,7 +25,9 @@ return v.s. return, time diff
 def func(args):
 #     ------------- parse command line input args -------------
 #     default use wind datasource
-    underlying_config_file = [] if args.underlying_config_file is None else args.underlying_config_file[0].lower()
+    underlying_config_file = list() if args.underlying_config_file is None else args.underlying_config_file[0].lower()
+    exchange_list = list() if args.exchange is None else [x.upper() for x in args.exchange]    
+    underlying_list = list() if args.underlying is None else [x.upper() for x in args.underlying]
     ratio = ['cs','bf'] if args.ratio is None else [x.lower() for x in args.ratio]    
     ts_diff = 0 if args.ts_diff is None else int(args.ts_diff[0])
     ex_outlier_thres = 3.5 if args.ex_outlier_thres is None else float(args.ex_outlier_thres[0])
@@ -34,14 +36,20 @@ def func(args):
 #     directory for symbol data csv file
     fdir = 'C:\\wind_data_cn_futures\\eod_c\\'  
 
-#     underlying configuration
+#     underlying configuration file
     underlying_dict = PyShare.Utils.config_read(underlying_config_file)    
     for key, value in underlying_dict.items():
         value['exchange'] = key.split('.')[0]
         value['underlying'] = key.split('.')[1]
         value['merge_col'] = 'DATETIME'
         value['obs_col'] = ['OPEN', 'CLOSE']   
-            
+    
+#     select specific exchange and/or underlying
+    if len(exchange_list)!=0:
+        underlying_dict = {key: value for key, value in underlying_dict.items() if value['exchange'] in exchange_list}
+    if len(underlying_list)!=0:
+        underlying_dict = {key: value for key, value in underlying_dict.items() if value['underlying'] in underlying_list}
+
 #     ratio for analysis
     ratio_dict = dict()
     for i in ratio:   
@@ -96,7 +104,8 @@ def func(args):
                     outlier_idx.update({k:idx})
                  
 #                 boxplot and save figure to png
-                title = 'lds=' + value['last_day_shift'][0] + \
+                title = 'date=' + dt.datetime.today().strftime('%Y-%m-%d') + \
+                        ' lds=' + value['last_day_shift'][0] + \
                         ' tsdiff=' + str(ts_diff) + \
                         ' median=' + str(pm.median()) + \
                         ' eos=' + str(ex_outlier_thres)
@@ -112,6 +121,8 @@ def func(args):
 def main():
     parser = argparse.ArgumentParser(usage='Analysis')
     parser.add_argument('-ucf', '--underlying_config_file', nargs='*', action='store')
+    parser.add_argument('-e', '--exchange', nargs='*', action='store')    
+    parser.add_argument('-u', '--underlying', nargs='*', action='store')    
     parser.add_argument('-r', '--ratio', nargs='*', action='store')
     parser.add_argument('-tsdiff', '--ts_diff', nargs='*', action='store')
     parser.add_argument('-ex', '--ex_outlier_thres', nargs='*', action='store')
@@ -121,13 +132,16 @@ def main():
         func(args)
     except Exception as e: 
         print(__file__, '\n', e)  
- 
+
 if __name__ == '__main__':
     main()
-    
-# .\PyAnalysis.py -ucf underlying.ini -r cs bf -tsdiff 0 -ex 5
+
+# cd 'Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis'
+# python .\PyAnalysis.py -ucf underlying.ini -r cs bf -tsdiff 0 -ex 5
 # -m, mode, how to generate combo_all, i.e., same underlying or inter-underlying
 # -ucf, underlying_config_file
+# -e, select specific exchange from the config file
+# -u, select specific underlying
 # -r, ratio, e.g., cs, bf, bx
 # -tsdiff, time series differential
 # -ex, excluding outlier threshold, default value = 3.5
