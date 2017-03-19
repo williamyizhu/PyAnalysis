@@ -93,6 +93,13 @@ def func(args):
                     for xkey, xvalue in result.items():   
                         if xkey[0].split('.')[1][-2:]==month_value:
                             result2.update({xkey:xvalue})                
+
+                ylabel = key + ' ratio=' + str(ratio_value) + ' front_month=' + month_value
+
+#                 result2 dict may be empty, e.g., SHFE.AU butterfly, can not trade such ratio, i.e., no data
+                if len(result2)==0:
+                    print(ylabel, 'does not have sufficient data for such ratio')
+                    continue
                 
 #                 exclude outliers, pmedian=None, uses local median, instead of global median
                 outlier_idx = {}
@@ -109,7 +116,7 @@ def func(args):
                         ' tsdiff=' + str(ts_diff) + \
                         ' median=' + str(pm.median()) + \
                         ' eos=' + str(ex_outlier_thres)
-                ylabel = key + ' ratio=' + str(ratio_value) + ' front_month=' + month_value            
+
                 annotation = [str(len(v))+'\n'+str(list(outlier_idx[k]).count(True)) for k,v in result2.items()]                                
                 figname = os.path.join(odir, '.'.join([key,month_value,'png']))    
                 PyShare.SpPlot.spboxplot(result2, title, ylabel, annotation, value['month_list'][0], figname)
@@ -138,6 +145,7 @@ if __name__ == '__main__':
 
 # cd 'Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis'
 # python .\PyAnalysis.py -ucf underlying.ini -r cs bf -tsdiff 0 -ex 5
+# python .\PyAnalysis.py -ucf underlying.ini -e shfe -u cu -r bf -tsdiff 0 -ex 5
 # -m, mode, how to generate combo_all, i.e., same underlying or inter-underlying
 # -ucf, underlying_config_file
 # -e, select specific exchange from the config file
