@@ -12,7 +12,6 @@ import PyShare.Utils
 
 '''
 inter-commodity list
-return v.s. return, time diff
 '''
 
 # wdir = 'Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis'
@@ -66,7 +65,7 @@ def func(args):
         odir = os.path.join(os.getcwd(), ratio_key)    
         if not os.path.exists(odir):
             os.makedirs(odir)
-    
+                            
 #         ratio_value is ratio_list, analysis result for all combo
         for key, value in underlying_dict.items():        
 #             create a list of all the combo list, e.g., 
@@ -116,15 +115,14 @@ def func(args):
                         ' tsdiff=' + str(ts_diff) + \
                         ' median=' + str(pm.median()) + \
                         ' eos=' + str(ex_outlier_thres)
-
                 annotation = [str(len(v))+'\n'+str(list(outlier_idx[k]).count(True)) for k,v in result2.items()]                                
-                figname = os.path.join(odir, '.'.join([key,month_value,'png']))    
+                figname = os.path.join(odir, '.'.join([value['asset_class'][0],key,month_value,'png']))    
                 PyShare.SpPlot.spboxplot(result2, title, ylabel, annotation, value['month_list'][0], figname)
-                 
+                                 
                 print(ylabel, title)
                 for k in result2.keys():
-                    print(k) 
-
+                    print(k)
+                        
 def main():
     parser = argparse.ArgumentParser(usage='Analysis')
     parser.add_argument('-ucf', '--underlying_config_file', nargs='*', action='store')
