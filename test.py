@@ -1,3 +1,59 @@
+[DCE.I_SHFE.RB]
+asset_class = FERR
+ExUL = DCE.I,SHFE,RB
+year_start = 2012
+month_list = 01;05;09,01;05;10
+ratio = 1;-1,-1;1
+last_day_shift = -30
+
+[DCE.I_DCE.J_SHFE.RB]
+asset_class = FERR
+ExUL = DCE.I,DCE.J,SHFE,RB
+year_start = 2012
+month_list = 01;05;09,01;05;09,01;05;10
+ratio = 5,1,-1
+last_day_shift = -30
+
+import os
+import PyShare.Utils
+
+os.chdir('Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis')
+
+# underlying configuration file
+underlying_dict = PyShare.Utils.config_read('inter_commodity.ini')    
+
+    for key, value in underlying_dict.items():
+#         value['exchange'] = key.split('.')[0]
+#         value['underlying'] = key.split('.')[1]
+        value['merge_col'] = 'DATETIME'
+        value['obs_col'] = ['OPEN', 'CLOSE']
+        
+        if len(value['exul'])==len(value['month_list'])==len(value['ratio']):
+            print('OK')
+            
+            [i.split(';') for i in value['month_list']]
+            [int(i) for i in value['ratio']]
+            
+        else:
+            print('...')
+#         value[]
+        
+        
+
+'DCE.M'
+['01','05','09']
+'CZCE.RM'
+['01','05','09']
+[1,-1]
+[1,-1,-1,1]
+
+'DCE.I'
+['01','05','09']
+'SHFE.RB'
+['01','05','10']
+[6,-1]
+[6,-6,-1,1]
+
 import statsmodels.api as sm
 
 

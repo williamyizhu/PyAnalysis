@@ -1,6 +1,7 @@
 import os
 import sys
 import pandas as pd
+import numpy as np
 import datetime as dt
 import functools
 import argparse
@@ -14,8 +15,7 @@ import PyShare.Utils
 inter-commodity list
 '''
 
-# wdir = 'Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis'
-# os.chdir(wdir)
+# os.chdir('Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis')
 # underlying_config_file = 'underlying_sample.ini'
 # ratio = ['cs']
 # ts_diff = 0
@@ -41,8 +41,7 @@ def func(args):
         value['exchange'] = key.split('.')[0]
         value['underlying'] = key.split('.')[1]
         value['merge_col'] = 'DATETIME'
-        value['obs_col'] = ['OPEN', 'CLOSE']   
-    
+        value['obs_col'] = ['OPEN', 'CLOSE']
 #     select specific exchange and/or underlying
     if len(exchange_list)!=0:
         underlying_dict = {key: value for key, value in underlying_dict.items() if value['exchange'] in exchange_list}
@@ -108,12 +107,13 @@ def func(args):
 #                     idx = PyShare.Analysis.is_outlier(v, pmedian=None, thres=ex_outlier_thres)                
                     result2.update({k:v[~idx]})
                     outlier_idx.update({k:idx})
-                 
+                
 #                 boxplot and save figure to png
                 title = 'date=' + dt.datetime.today().strftime('%Y-%m-%d') + \
                         ' lds=' + value['last_day_shift'][0] + \
                         ' tsdiff=' + str(ts_diff) + \
                         ' median=' + str(pm.median()) + \
+                        ' std=' + str(np.mean([v.std() for v in result2.values()])) + \
                         ' eos=' + str(ex_outlier_thres)
                 annotation = [str(len(v))+'\n'+str(list(outlier_idx[k]).count(True)) for k,v in result2.items()]                                
                 figname = os.path.join(odir, '.'.join([value['asset_class'][0],key,month_value,'png']))    

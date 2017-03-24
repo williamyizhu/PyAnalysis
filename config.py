@@ -55,3 +55,27 @@ for key, value in underlying_dict.items():
 
 with open('underlying.ini', 'w') as f:
     underlying.write(f)
+
+# ------------------- inter-commodity -------------------
+inter_commodity = configparser.SafeConfigParser()
+
+section_id = 'SHFE.RB_SHFE.HC'
+inter_commodity.add_section(section_id)
+inter_commodity.set(section_id, 'asset_class', 'FERR')
+inter_commodity.set(section_id, 'exul', 'SHFE.RB,SHFE.HC')
+inter_commodity.set(section_id, 'year_start', '2012')
+inter_commodity.set(section_id, 'month_list', '01;05;10,01;05;10')
+inter_commodity.set(section_id, 'ratio', '1;-1,-1;1')
+inter_commodity.set(section_id, 'last_day_shift', '-30')
+
+section_id = 'STEELMILL'
+inter_commodity.add_section(section_id)
+inter_commodity.set(section_id, 'asset_class', 'FERR')
+inter_commodity.set(section_id, 'exul', 'DCE.I,DCE.J,SHFE.RB')
+inter_commodity.set(section_id, 'year_start', '2012')
+inter_commodity.set(section_id, 'month_list', '01;05;09,01;05;09,01;05;10')
+inter_commodity.set(section_id, 'ratio', '5,1,-1')
+inter_commodity.set(section_id, 'last_day_shift', '-30')
+
+with open('inter_commodity.ini', 'w') as f:
+    inter_commodity.write(f)
