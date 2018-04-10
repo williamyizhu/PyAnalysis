@@ -2,9 +2,6 @@ import os
 import argparse
 import shutil
 
-# os.chdir('Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis')
-# print(os.getcwd())
-
 def func(args):
 #     ------------- parse command line input args -------------
     ratio = ['cs','bf'] if args.ratio is None else [x.lower() for x in args.ratio]    
@@ -39,9 +36,9 @@ def func(args):
                     shutil.copyfile(os.path.join(src,ff), os.path.join(dst,ff))
 
 def main():
-    parser = argparse.ArgumentParser(usage='Copy Files to Month Folder') 
+    parser = argparse.ArgumentParser(usage='Copy Files to Month Folder')
     parser.add_argument('-r', '--ratio', nargs='*', action='store')
-    args = parser.parse_args()    
+    args = parser.parse_args()
 #     print(args)
     try:
         func(args)
