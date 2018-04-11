@@ -19,6 +19,7 @@ def func(args):
 #     ------------- parse command line input args -------------
 #     default use wind datasource
     underlying_config_file = list() if args.underlying_config_file is None else args.underlying_config_file[0].lower()
+    analysis_date = dt.datetime.now() if args.analysis_date is None else dt.datetime.strptime(args.analysis_date[0], '%Y%m%d')
     profile_list = list() if args.profile is None else [x.upper() for x in args.profile]
     exchange_list = list() if args.exchange is None else [x.upper() for x in args.exchange]    
     underlying_list = list() if args.underlying is None else [x.upper() for x in args.underlying]
@@ -80,70 +81,88 @@ def func(args):
         else:
             print('profile configuration may contain error:', key, value)
 
-#     Analysis.combo_analysis, Analysis.combo_stats, SpPlot.spboxplot, spread plot
-#     result = dict({('CZCE.CF1401','CZCE.CF1405'):[value], ('CZCE.CF1405','CZCE.CF1409'):[value]})
+#     Analysis.combo_analysis, group in expiration months, SpPlot.spboxplot
     watchlist = dict()
     for x in x_std:
         watchlist.update({x:[]})
     for key,value in underlying_dict.items():
-#         --------------- analysis ---------------
+#         --------------- calculate spread value, local stats analysis ---------------
 #         calculate spread value for all combo in the value['combo_list'], check if to use the time series difference on the result data
-        result = Analysis.combo_analysis(fdir, value['combo_list'], value['ratio'], value['merge_col'][0], int(value['last_day_shift'][0]), value['obs_col'])
+#         result = dict({('CZCE.CF1401','CZCE.CF1405'):[value], ('CZCE.CF1405','CZCE.CF1409'):[value]})
+#         stats = dict({('CZCE.CF1401','CZCE.CF1405'):{'mean':value, 'std':value, ...}, ('CZCE.CF1405','CZCE.CF1409'):{'mean':value, 'std':value, ...}})
+        result, stats = Analysis.combo_analysis(fdir, value['combo_list'], value['ratio'], value['merge_col'][0], int(value['last_day_shift'][0]), value['obs_col'], ex_outlier_thres)
         if ts_diff>0:
             for k, v in result.items():
                 result.update({k:v.diff(ts_diff).dropna()})
-
-#         calculate statistics for all combo, local and global, save data in watchlist
-        sloc, sglb = Analysis.combo_stats(result, ex_outlier_thres)
-        for k, v in result.items():
-            if Analysis.is_contract_expired(k[0]):
-                for x in x_std:
-                    if v.iloc[-1] < sloc[k]['mean']-x*sglb['std'] or sloc[k]['mean']+x*sglb['std'] < v.iloc[-1]:
-                        watchlist[x].append([key, k, v.iloc[-1]])
-
-#         --------------- spread plot ---------------
+#         return(0)
+#         --------------- analysis based on expiration months, spread plot ---------------
 #         check if png output directory exists
         odir = os.path.join(os.getcwd(), value['combo_type'][0])    
         if not os.path.exists(odir):
             os.makedirs(odir)
 
-#         analysis result for specific front month combo, '00' means include all front month combo
+#         sub group analysis result for specific front month combo, '00' means include all front month combo
         for month_value in value['front_month']+['00']:
-#             only selection front month contract, which is in the month_value
+#             only selection front month contract for both result and stats, calculate statistics for sub group
             if month_value=='00':
                 result2 = result.copy()
+                stats2 = stats.copy()
             else:
                 result2 = {}
+                stats2 = {}
                 for xkey, xvalue in result.items():   
                     if xkey[0].split('.')[1][-2:]==month_value:
-                        result2.update({xkey:xvalue})                
+                        result2.update({xkey:xvalue})
+                        stats2.update({xkey:stats[xkey]})
+            stats2g = Analysis.combo_global_stats(stats2)
 
 #             result2 dict may be empty, e.g., SHFE.AU butterfly, can not trade such ratio, i.e., no data
             if len(result2)==0:
                 print(key, month_value, 'does not have sufficient data for such ratio')
                 continue
 
-#             boxplot and save figure to png
+#             --------------- boxplot and save figure to png ---------------
+#             *** red line (mean value) in the figure may not be the same as mean value in title ***
+#             *** combo_global_stats() excludes entries with less than 30 observations, SpPlot() does not***
             title = 'date=' + dt.datetime.today().strftime('%Y-%m-%d') + \
                     ' lds=' + value['last_day_shift'][0] + \
                     ' tsdiff=' + str(ts_diff) + \
-                    ' mean=' + str(sglb['mean']) + \
-                    ' std=' + str(sglb['std']) + \
+                    ' mean=' + str(stats2g['mean']) + \
+                    ' std=' + str(stats2g['std']) + \
                     ' eos=' + str(ex_outlier_thres)
             ylabel = key + ' ratio=' + str(value['ratio']) + ' front_month=' + month_value
-            annotation = [str(len(v))+'\n'+str(sloc[k]['outlier']) for k,v in result2.items()]                                
+            annotation = [str(len(v))+'\n'+str(stats[k]['outlier']) for k,v in result2.items()]                                
             figname = os.path.join(odir, '.'.join([value['asset_class'][0],key,month_value,'png']))    
             SpPlot.spboxplot(result2, title, ylabel, annotation, value['front_month'][0], figname)
 
             print(ylabel, title)
             [print(k) for k in result2.keys()]
+            
+#             --------------- watchlist selection criteria, based on result2, stats2, stats2g ---------------
+            for k, v in result2.items():
+                if Analysis.is_contract_in_deliver_month(k[0], analysis_date):
+                    print()
+                else:
+                    for x in x_std:
+                        lower_range = stats2[k]['mean'] - x * stats2g['std']
+                        upper_range = stats2[k]['mean'] + x * stats2g['std']
+                        
+                        if v.iloc[-1] < lower_range:
+                            watchlist[x].append([key, k, v.iloc[-1]])
+                        elif upper_range < v.iloc[-1]:
+                            watchlist[x].append([key, k, v.iloc[-1]])
 
     print('--------------- watchlist ---------------')
-    odir = os.path.join(os.getcwd(), 'watchlist')    
+    odir = os.path.join(os.getcwd(), 'watchlist')
     if not os.path.exists(odir):
         os.makedirs(odir)
-    f = open(os.path.join(odir, '.'.join([underlying_config_file.split('.')[0],'txt'])), 'w')
+    filename = '.'.join([analysis_date.strftime('%Y%m%d_%H%M%S_')+underlying_config_file.split('.')[0],'txt'])
+    f = open(os.path.join(odir, filename), 'w')
     for k, v in watchlist.items():
+        
+#         gg = pd.DataFrame.from_records(v, columns=['profile', 'combo', 'value'])
+#         print(gg)
+        
         print('x_std:', k)
         [print(i) for i in v]
         f.write(''.join(['x_std:', str(k), '\n']))
@@ -153,6 +172,7 @@ def func(args):
 def main():
     parser = argparse.ArgumentParser(usage='Analysis')
     parser.add_argument('-ucf', '--underlying_config_file', nargs='*', action='store')
+    parser.add_argument('-d', '--analysis_date', nargs='*', action='store')
     parser.add_argument('-p', '--profile', nargs='*', action='store')
     parser.add_argument('-e', '--exchange', nargs='*', action='store')    
     parser.add_argument('-u', '--underlying', nargs='*', action='store')    
@@ -173,8 +193,9 @@ if __name__ == '__main__':
 # cd 'Z:\williamyizhu On My Mac\Documents\workspace\PyAnalysis'
 # cd 'Z:\Documents\workspace\PyAnalysis'
 
-# python .\PyAnalysis.py -ucf underlying.ini -r cs bf -tsdiff 0 -ex 5
-# python .\PyAnalysis.py -ucf underlying.ini -e shfe -u cu -r bf -tsdiff 0 -ex 5
+# python .\PyAnalysis.py -ucf calendar.ini -tsdiff 0 -ex 5 -xs 1.5 1.95 2.5
+# python .\PyAnalysis.py -ucf butterfly.ini -tsdiff 0 -ex 5 -xs 1.5 1.95 2.5
+# python .\PyAnalysis.py -ucf combo.ini -tsdiff 0 -ex 5 -xs 1.5 1.95 2.5
 
 # -ucf, underlying_config_file
 # -p, profile name in underlying_config_file
