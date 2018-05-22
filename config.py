@@ -140,14 +140,18 @@ combo_dict.update({'DCE.J_DCE.JM_ICS'   :{'asset_class':['FERR'], 'exul':['DCE.J
 combo_dict.update({'DCE.M_CZCE.RM_ICS'  :{'asset_class':['ARGS'], 'exul':['DCE.M','CZCE.RM'],   'year':['2010','2020'], 'month':[A010509,A010509], 'combo_type':['COMBO'], 'ratio':['1','-1'], 'last_day_shift':['0']}})
 combo_dict.update({'DCE.Y_DCE.P_ICS'    :{'asset_class':['ARGS'], 'exul':['DCE.Y','DCE.P'],     'year':['2010','2020'], 'month':[A010509,A010509], 'combo_type':['COMBO'], 'ratio':['1','-1'], 'last_day_shift':['0']}})
 combo_dict.update({'DCE.L_DCE.V_ICS'    :{'asset_class':['CHEM'], 'exul':['DCE.L','DCE.V'],     'year':['2010','2020'], 'month':[A010509,A010509], 'combo_type':['COMBO'], 'ratio':['1','-1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.L_DCE.PP_ICS'   :{'asset_class':['CHEM'], 'exul':['DCE.L','DCE.PP'],    'year':['2010','2020'], 'month':[A010509,A010509], 'combo_type':['COMBO'], 'ratio':['1','-1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.PP_CZCE.MA_ICS' :{'asset_class':['CHEM'], 'exul':['DCE.PP','CZCE.MA'],  'year':['2010','2020'], 'month':[A010509,A010509], 'combo_type':['COMBO'], 'ratio':['1','-3'], 'last_day_shift':['0']}})
 
-combo_dict.update({'SHFE.RB_SHFE.HC_BX':{'asset_class':['FERR'], 'exul':['SHFE.RB','SHFE.RB','SHFE.HC','SHFE.HC'], 'year':['2010','2020'], 'month':[A010510,B010510,A010510,B010510], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
-combo_dict.update({'DCE.J_DCE.JM_BX'   :{'asset_class':['FERR'], 'exul':['DCE.J','DCE.J','DCE.JM','DCE.JM'],       'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
-combo_dict.update({'DCE.M_CZCE.RM_BX'  :{'asset_class':['ARGS'], 'exul':['DCE.M','DCE.M','CZCE.RM','CZCE.RM'],     'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
-combo_dict.update({'DCE.Y_DCE.P_BX'    :{'asset_class':['ARGS'], 'exul':['DCE.Y','DCE.Y','DCE.P','DCE.P'],         'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
-combo_dict.update({'DCE.L_DCE.V_BX'    :{'asset_class':['CHEM'], 'exul':['DCE.L','DCE.L','DCE.V','DCE.V'],         'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
+combo_dict.update({'SHFE.RB_SHFE.HC_BX' :{'asset_class':['FERR'], 'exul':['SHFE.RB','SHFE.RB','SHFE.HC','SHFE.HC'], 'year':['2010','2020'], 'month':[A010510,B010510,A010510,B010510], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.J_DCE.JM_BX'    :{'asset_class':['FERR'], 'exul':['DCE.J','DCE.J','DCE.JM','DCE.JM'],       'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.M_CZCE.RM_BX'   :{'asset_class':['ARGS'], 'exul':['DCE.M','DCE.M','CZCE.RM','CZCE.RM'],     'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.Y_DCE.P_BX'     :{'asset_class':['ARGS'], 'exul':['DCE.Y','DCE.Y','DCE.P','DCE.P'],         'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.L_DCE.V_BX'     :{'asset_class':['CHEM'], 'exul':['DCE.L','DCE.L','DCE.V','DCE.V'],         'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.L_DCE.PP_BX'    :{'asset_class':['CHEM'], 'exul':['DCE.L','DCE.L','DCE.PP','DCE.PP'],       'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-1','1'], 'last_day_shift':['0']}})
+combo_dict.update({'DCE.PP_CZCE.MA_BX'  :{'asset_class':['CHEM'], 'exul':['DCE.PP','DCE.PP','CZCE.MA','CZCE.MA'],   'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-3','3'], 'last_day_shift':['0']}})
 
-combo_dict.update({'STEELMILL'         :{'asset_class':['FERR'], 'exul':['DCE.I','DCE.J','SHFE.RB'],               'year':['2010','2020'], 'month':[A010509,A010509,A010510],         'combo_type':['COMBO'], 'ratio':['-2','-1','1'],      'last_day_shift':['0']}})
+combo_dict.update({'STEELMILL'          :{'asset_class':['FERR'], 'exul':['DCE.I','DCE.J','SHFE.RB'],               'year':['2010','2020'], 'month':[A010509,A010509,A010510],         'combo_type':['COMBO'], 'ratio':['-2','-1','1'],      'last_day_shift':['0']}})
 
 # combo configuration
 combo = configparser.SafeConfigParser()
