@@ -82,6 +82,8 @@ def func(args):
 #     Analysis.combo_analysis, group in expiration months, SpPlot.spboxplot
     exportlist = []
     for key,value in underlying_dict.items():
+        print('--------', key, '--------')
+
 #         --------------- calculate spread value, local stats analysis ---------------
 #         calculate spread value for all combo in the value['combo_list'], check if to use the time series difference on the result data
 #         result = dict({('CZCE.CF1401','CZCE.CF1405'):[value], ('CZCE.CF1405','CZCE.CF1409'):[value]})
@@ -133,7 +135,7 @@ def func(args):
             figname = os.path.join(odir, '.'.join([value['asset_class'][0],key,month_value,'png']))
             SpPlot.spboxplot(result2, title, ylabel, annotation, value['front_month'][0], figname)
             print(ylabel, title)
-            [print(k) for k in result2.keys()]
+#             [print(k) for k in result2.keys()]
 
 #     --------------- export key statstics to csv file ---------------
     odir = os.path.join(os.getcwd(), 'analysis')
