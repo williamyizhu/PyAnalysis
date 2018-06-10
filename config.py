@@ -162,8 +162,9 @@ combo_dict.update({'DCE.L_DCE.PP_BX'    :{'asset_class':['CHEM'], 'exul':['DCE.L
 combo_dict.update({'DCE.PP_CZCE.MA_BX'  :{'asset_class':['CHEM'], 'exul':['DCE.PP','DCE.PP','CZCE.MA','CZCE.MA'],   'year':['2010','2020'], 'month':[A010509,B010509,A010509,B010509], 'combo_type':['COMBO'], 'ratio':['1','-1','-3','3'], 'last_day_shift':['0']}})
 
 # ------- Others -------
-combo_dict.update({'STEELMILL'          :{'asset_class':['FERR'], 'exul':['DCE.I','DCE.J','SHFE.RB'],               'year':['2010','2020'], 'month':[A010509,A010509,A010510],         'combo_type':['COMBO'], 'ratio':['-2','-1','1'],      'last_day_shift':['0']}})
-combo_dict.update({'CRUSH'              :{'asset_class':['ARGS'], 'exul':['DCE.A','DCE.M','SHFE.Y'],                'year':['2010','2020'], 'month':[A010509,A010509,A010509],         'combo_type':['COMBO'], 'ratio':['-5','4','1'],       'last_day_shift':['0']}})
+combo_dict.update({'STEELMILL_RB'       :{'asset_class':['FERR'], 'exul':['DCE.I','DCE.J','SHFE.RB'],               'year':['2010','2020'], 'month':[A010509,A010509,A010510],         'combo_type':['COMBO'], 'ratio':['-3','-1','2'],      'last_day_shift':['0']}})
+combo_dict.update({'STEELMILL_HC'       :{'asset_class':['FERR'], 'exul':['DCE.I','DCE.J','SHFE.HC'],               'year':['2010','2020'], 'month':[A010509,A010509,A010510],         'combo_type':['COMBO'], 'ratio':['-3','-1','2'],      'last_day_shift':['0']}})
+combo_dict.update({'CRUSH'              :{'asset_class':['ARGS'], 'exul':['DCE.A','DCE.M','DCE.Y'],                 'year':['2010','2020'], 'month':[A010509,A010509,A010509],         'combo_type':['COMBO'], 'ratio':['-5','4','1'],       'last_day_shift':['0']}})
 
 # combo configuration
 combo = configparser.SafeConfigParser()
