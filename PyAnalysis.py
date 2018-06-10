@@ -99,7 +99,7 @@ def func(args):
 #         sub group analysis result for specific front month combo, '00' means include all front month combo
         for month_value in value['front_month']+['00']:
 #             only selection front month contract for both result and stats, calculate statistics for sub group
-#             stats2 is the local stats in sub group, stats2g is the global statistics value of that sub group
+#             stats2 is the local stats in sub group (e.g., month_value='01'), stats2g is the global statistics value of that sub group
             if month_value=='00':
                 result2 = result.copy()
                 stats2 = stats.copy()
@@ -117,7 +117,7 @@ def func(args):
                 print(key, month_value, 'does not have sufficient data for such ratio')
                 continue
 
-#             --------------- save key statstics to list, later export to csv file ---------------
+#             --------------- save key statistics to list, later export to csv file ---------------
             for k, v in result2.items():
                 tmp = [stats2[k]['last_trading_day'], stats2[k]['outlier'], stats2[k]['n'], stats2[k]['mean'], stats2[k]['median'], stats2[k]['std']]
                 exportlist.append([key, month_value, k, *tmp, v.iloc[-1]])

@@ -7,10 +7,6 @@ import argparse
 sys.path.append(os.path.join(os.path.abspath('..'), 'PyShare\\SpreadAnalysis'))
 import Analysis
 
-'''
-std shift, calculate std for each leg
-'''
-
 def func(args):
 #     ------------- parse command line input args -------------
 #     default use wind datasource
@@ -46,7 +42,7 @@ def func(args):
                 pass
             else:
                 for x in x_std:
-#                     selection criteria
+#                     selection criteria, row['mean'] is moving average
                     lower_range = row['mean'] - x * gpstd
                     upper_range = row['mean'] + x * gpstd
                     vlist = [row['last_trading_day'], *gpk, row['combo'], row['mean'], gpstd, row['last_value'], lower_range, upper_range]
