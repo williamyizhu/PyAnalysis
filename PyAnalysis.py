@@ -1,11 +1,11 @@
 import os
 import sys
+sys.path.append(os.path.join(os.path.abspath('..'), 'PyShare\\SpreadAnalysis'))
+sys.path.append(os.path.join(os.path.abspath('..'), 'PyShare\\PyShare'))
 import pandas as pd
 import datetime as dt
 import argparse
-sys.path.append(os.path.join(os.path.abspath('..'), 'PyShare\\PyShare'))
 import Utils
-sys.path.append(os.path.join(os.path.abspath('..'), 'PyShare\\SpreadAnalysis'))
 import Analysis
 import SpPlot
 

@@ -1,10 +1,10 @@
 import os
 import sys
+sys.path.append(os.path.join(os.path.abspath('..'), 'PyShare\\SpreadAnalysis'))
 import pandas as pd
 import numpy as np
 import datetime as dt
 import argparse
-sys.path.append(os.path.join(os.path.abspath('..'), 'PyShare\\SpreadAnalysis'))
 import Analysis
 
 def func(args):
