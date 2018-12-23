@@ -101,6 +101,7 @@ def func(args):
             os.makedirs(odir)
 
         # sub group analysis result for specific front month combo, e.g., '01', '05', '09', '00' means include all front month combo
+        # stats (single combo) --> stats2 (dict of single combos, groupby front month) --> stats2g (statstical value of stats2)
         for month_value in value['front_month'] + ['00']:
             # only selection front month contract for both result and stats, calculate statistics for sub group
             # stats2 is the local stats in sub group (e.g., month_value='01'), stats2g is the global statistics value of that sub group
@@ -143,6 +144,9 @@ def func(args):
     # [print(k) for k in result2.keys()]
 
     # --------------- export key statstics to csv file ---------------
+    # \PyAnalysis\analysis\20181223_analysis_calendar.txt
+    # profile,  month, combo,                        last_trading_day,    outlier, n,   mean,                median, std,               last_value
+    # DCE.A_CS, 01,    "('DCE.A1201', 'DCE.A1205')", 2011-12-30 00:00:00, 0,       558, -144.75985663082437, -121.0, 62.19999914546419, -221.0
     odir = os.path.join(os.getcwd(), 'analysis')
     if not os.path.exists(odir):
         os.makedirs(odir)
